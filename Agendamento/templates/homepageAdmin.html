@@ -1,0 +1,74 @@
+{% extends "indexAdmin.html" %}
+{% load static %}
+
+{% block body %}
+<div class="container1">
+    <h1>Agendamento de salas</h1>
+    <p>Apenas permissão dos Professores e coordenadores</p>
+    <div class="table-actions">
+        <form id="deleteForm" method="POST" action="{% url 'homepageAdmin' %}">
+            {% csrf_token %}
+            <input type="hidden" name="delete" value="delete">
+            <input type="hidden" id="selectedIds" name="selected_ids">
+
+        </form>
+        <button id="filterBtn">Filters</button>
+        <button id="exportBtn">Export</button>
+        <button id="addBtn" class="add-new">+ Adicionar</button>
+    </div>
+    <table class="student-table">
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="selectAll"><label for="selectAll"></label></th>
+                <th>Sala</th>      
+                <th>Número</th>
+                <th>Corredor</th>
+                <th>Agendamento</th>
+                <th>Equipamentos</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in dadosSalas %}
+                <tr>
+                    <td><input type="checkbox" class="select-row" data-id="{{ item.id }}" id="checkbox{{ forloop.counter }}"><label for="checkbox{{ forloop.counter }}"></label></td>
+                    <td>{{ item.salas }}</td>
+                    <td>{{ item.numero }}</td>
+                    <td>{{ item.corredor }}</td>
+                    <td class="status inactive">Inactive</td>
+                    <td>{{ item.equipamentos }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal -->
+<div id="addRoomModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Adicione uma sala ao banco de dados</h2>
+        <form id="addRoomForm" method="POST" action="{% url 'homepageAdmin' %}">
+            {% csrf_token %}
+            <label for="roomName">Sala:</label>
+            <input type="text" id="roomName" name="salas" placeholder="Nome da Sala">
+            <label for="roomNumber">Nº - Sala:</label>
+            <input type="text" id="roomNumber" name="numero" placeholder="Número da sala">
+            <label for="description">Descrição:</label>
+            <input type="text" id="description" name="descricao" placeholder="Descrição">
+            <label for="equipment">Equipamentos:</label>
+            <input type="text" id="equipment" name="equipamentos" placeholder="Equipamentos">
+            <label for="corredor">Corredor:</label>
+            <input type="text" id="corredor" name="corredor" placeholder="Corredor">
+            <button type="submit" class="add-btn">+ Adicionar</button>
+        </form>
+    </div>
+</div>
+<div id="filterModal" class="modal">
+    <div class="modal-content">
+        <h2>Escolha o tipo de filtro</h2>
+        <button id="filterAZBtn">A - Z</button>
+        <button id="filterNumBtn">Ordem numérica</button>
+    </div>
+</div>
+
+{% endblock %}
